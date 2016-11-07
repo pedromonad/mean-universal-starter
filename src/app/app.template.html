@@ -1,0 +1,25 @@
+<div class="container">
+
+  <nav class="navbar navbar-dark bg-primary">
+    <div class="nav navbar-nav">
+      <a class="navbar-brand pull-right" [routerLink]="['/']">
+        <img class="angular2icon" src="public/assets/favicon.ico"> Angular 2 Full Stack
+      </a>
+
+      <a routerLink="/home" routerLinkActive="active">Home</a>
+
+      <a [routerLink]="['/clientes']" class="nav-item nav-link" routerLinkActive="active">
+        <i class="fa fa-users"></i> Clientes
+      </a>
+      <a [routerLink]="['/login']" class="nav-item nav-link">
+        <i class="fa fa-power-off"></i> Logout
+      </a>
+
+    </div>
+  </nav>
+
+  <h2>Hello Angular Universal App</h2>
+
+  <router-outlet></router-outlet>
+
+</div>

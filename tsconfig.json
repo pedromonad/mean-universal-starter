@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": true,
+    "sourceRoot": "src",
+    "moduleResolution": "node",
+    "target": "es5",
+    "lib": ["dom", "es5"],
+    "types": [
+      "body-parser",
+      "compression",
+      "cookie-parser",
+      "express",
+      "mongoose",
+      "express-serve-static-core",
+      "mime",
+      "node",
+      "serve-static",
+      "hammerjs"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "compileOnSave": false,
+  "buildOnSave": false,
+  "atom": { "rewriteTsconfig": false }
+}
