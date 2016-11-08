@@ -1,13 +1,34 @@
-import Promise from 'bluebird';
-import mongoose from 'mongoose';
-import httpStatus from 'http-status';
-import APIError from '../helpers/APIError';
+import mongoose = require('mongoose');
+import Promise = require('bluebird');
+import httpStatus = require('http-status');
 
-/**
- * Client Schema
- */
-const ClientSchema = new mongoose.Schema({
-  name: {
+import { Schema, Document, Model } from "mongoose";
+
+export interface IClient extends Document {
+    _id: mongoose.Types.ObjectId;
+    name: string,
+    lastName: string,
+    rg: string,
+    cpf: string,
+    maritalStatus: string,
+    sex: string,
+    address: string,
+    city: string,
+    state: string,
+    phone: string,
+    facebook: string,
+    email: string,
+    birthday: string,
+    info: string,
+    createdAt?: Date
+}
+
+export interface IClientModel {
+    get(id: string): Promise<IClient>
+}
+
+const ClientSchema = new Schema({
+    name: {
     type: String,
     required: true
   },
@@ -73,6 +94,7 @@ const ClientSchema = new mongoose.Schema({
   }
 });
 
+
 /**
  * Add your
  * - pre-save hooks
@@ -125,7 +147,7 @@ ClientSchema.statics = {
   /**
    * Get client
    * @param {ObjectId} id - The objectId of client.
-   * @returns {Promise<Client, APIError>}
+   * @returns {Promise<Client, Error>}
    */
   get(id) {
     return this.findById(id)
@@ -134,7 +156,7 @@ ClientSchema.statics = {
         if (client) {
           return client;
         }
-        const err = new APIError('No such client exists!', httpStatus.NOT_FOUND);
+        const err = new Error('No such client exists! ' + httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
   },
@@ -154,7 +176,7 @@ ClientSchema.statics = {
   }
 };
 
-/**
- * @typedef Client
- */
-export default mongoose.model('Client', ClientSchema);
+
+export type ClientModel = Model<IClient> & IClientModel;
+
+export const Client: ClientModel = <ClientModel>mongoose.model<IClient>("Client", ClientSchema);

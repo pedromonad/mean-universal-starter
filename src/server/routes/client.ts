@@ -1,38 +1,38 @@
-import * as express from 'express';
-import * as clientCtrl from '../controllers/client';
-import commentCtrl from '../controllers/comment';
+import { Router, Request, Response } from "express";
+import ClientController = require('../controllers/client');
+import CommentController = require('../controllers/comment');
+import express = require("express");
 
-const router = express.Router(); // eslint-disable-line new-cap
+var router = express.Router();
+class ClientRoutes {
 
-router.route('/')
-  /** GET /api/clients - Get list of clients */
-  .get(clientCtrl.list)
+    //private router: Router = Router();
+    private _clientCtrl: ClientController;
+    private _commentCtrl: CommentController;
 
-  /** POST /api/clients - Create new client */
-  .post(clientCtrl.create);
+    contructor(){
+       this._clientCtrl = new ClientController();
+       this._commentCtrl = new CommentController();
+    }
 
-router.route('/:clientId')
-  /** GET /api/clients/:clientId - Get client */
-  .get(clientCtrl.get)
+    
+    getRouter(): Router {
+        let clientCtrl = this._clientCtrl;
+        let commentCtrl = this._commentCtrl;
 
-  /** PUT /api/clients/:clientId - Update client */
-  .put(clientCtrl.update)
+        router.get("/", clientCtrl.list);
+        router.post("/", clientCtrl.create);
+        router.put("/:clientId", clientCtrl.update);
+        router.get("/:clientId", clientCtrl.get);
+        router.delete("/:clientId", clientCtrl.remove);
 
-  /** DELETE /api/clients/:clientId - Delete client */
-  .delete(clientCtrl.remove);
+        router.get("/:clientId/comments", commentCtrl.create);
+        router.post("/:clientId/comments", commentCtrl.get);
+        router.delete("/:clientId/comments/:commentId", commentCtrl.remove);
 
+        return router;
+    }
+}
 
-
-router.route('/:clientId/comments')
-  .post(commentCtrl.create)
-
-  .get(commentCtrl.get);
-
-router.route('/:clientId/comments/:commentId')  
-  .delete(commentCtrl.remove);
-
-
-/** Load client when API with clientId route parameter is hit */
-router.param('clientId', clientCtrl.load);
-
-export default router;
+Object.seal(ClientRoutes);
+export = ClientRoutes;

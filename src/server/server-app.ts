@@ -8,8 +8,8 @@ import * as cors from 'cors';
 import * as compress from 'compression';
 import * as  methodOverride from 'method-override';
 import * as httpStatus from 'http-status';
-import * as routes from './routes';
 
+import ClientRoutes = require('./routes/client');
 // Angular 2
 import { enableProdMode } from '@angular/core';
 // Angular 2 Universal
@@ -49,8 +49,6 @@ export class ServerApp {
         this._App.use(cors());
 
 
-        // mount all routes on /api path
-        this._App.use('/api', routes);
 
         // parse body params and attache them to req.body
         this._App.use(bodyParser.json());
@@ -68,12 +66,9 @@ export class ServerApp {
         this._App.use('/assets', express.static(path.join(__dirname, 'assets'), {maxAge: 30}));
         this._App.use(express.static(path.join(this.root, '../dist/client'), {index: false}));
 
-        // catch 404 and forward to error handler
-        this._App.use((req, res, next) => {
-            const err = new Error('API not found ' + httpStatus.NOT_FOUND);
-            return next(err);
-        });
-
+     
+        // mount all routes on /api path
+        this._App.use('/api/clients', new ClientRoutes().getRouter);
         this._App.get('/', this.ngApp);
         this._App.get('/home', this.ngApp);
         this._App.get('/home/*', this.ngApp);
@@ -93,6 +88,12 @@ export class ServerApp {
             res.status(404).send(json);
         });
 
+
+        // catch 404 and forward to error handler
+        this._App.use((req, res, next) => {
+            const err = new Error('API not found ' + httpStatus.NOT_FOUND);
+            return next(err);
+        });
     
         
     }
