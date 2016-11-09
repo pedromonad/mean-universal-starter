@@ -1,7 +1,15 @@
 'use strict';
 
-import 'zone.js';
-import 'reflect-metadata';
+import 'angular2-universal-polyfills';
+
+// Fix Universal Style
+import { NodeDomRootRenderer, NodeDomRenderer } from 'angular2-universal/node';
+function renderComponentFix(componentProto: any) {
+  return new NodeDomRenderer(this, componentProto, this._animationDriver);
+}
+NodeDomRootRenderer.prototype.renderComponent = renderComponentFix;
+// End Fix Universal Style
+
 
 let express = require('express');
 let path = require('path');
@@ -35,14 +43,13 @@ app.use(helmet());
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
-
+//
 // Express View
 app.engine('.html', createEngine({
     precompile: true,
@@ -61,9 +68,11 @@ require('./server/lib/connectMongoose');
 //
 // serve static files
 ///////////////////////////////////////////////////////////
-//app.use(express.static(path.join(__dirname, '../public')));
 app.use('/assets', express.static(path.join(__dirname, 'assets'), {maxAge: 30}));
 app.use(express.static(path.join(__dirname, '../dist/client'), {index: false}));
+
+// uncomment after placing your favicon in /public
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 // web dependencies from node_modules
 app.use('/nm/bootstrap',    express.static(path.join(__dirname, '../node_modules/bootstrap/dist')));
@@ -76,7 +85,7 @@ app.use('/nm/tether',       express.static(path.join(__dirname, '../node_modules
 app.use('/apiv1/products', require('./server/routes/apiv1/products').router);
 
 
-
+//
 // Server-side render
 app.use('/api/clients', new ClientRoutes().getRouter);
 app.get('/', ngApp);
