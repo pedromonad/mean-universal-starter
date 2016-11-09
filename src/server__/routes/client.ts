@@ -3,10 +3,10 @@ import ClientController = require('../controllers/client');
 import CommentController = require('../controllers/comment');
 import express = require("express");
 
-var router = express.Router();
+//var router = express.Router();
 class ClientRoutes {
 
-    //private router: Router = Router();
+    private router: Router = Router();
     private _clientCtrl: ClientController;
     private _commentCtrl: CommentController;
 
@@ -20,17 +20,17 @@ class ClientRoutes {
         let clientCtrl = this._clientCtrl;
         let commentCtrl = this._commentCtrl;
 
-        router.get("/", clientCtrl.list);
-        router.post("/", clientCtrl.create);
-        router.put("/:clientId", clientCtrl.update);
-        router.get("/:clientId", clientCtrl.get);
-        router.delete("/:clientId", clientCtrl.remove);
+        this.router.get("/", clientCtrl.list);
+        this.router.post("/", clientCtrl.create);
+        this.router.put("/:clientId", clientCtrl.update);
+        this.router.get("/:clientId", clientCtrl.get);
+        this.router.delete("/:clientId", clientCtrl.remove);
 
-        router.get("/:clientId/comments", commentCtrl.create);
-        router.post("/:clientId/comments", commentCtrl.get);
-        router.delete("/:clientId/comments/:commentId", commentCtrl.remove);
+        this.router.get("/:clientId/comments", commentCtrl.create);
+        this.router.post("/:clientId/comments", commentCtrl.get);
+        this.router.delete("/:clientId/comments/:commentId", commentCtrl.remove);
 
-        return router;
+        return this.router;
     }
 }
 

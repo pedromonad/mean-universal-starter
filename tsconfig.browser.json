@@ -1,29 +1,41 @@
 {
   "compilerOptions": {
+
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "mapRoot": "./",
     "module": "commonjs",
     "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": false,
+    "target": "es6",
+    "typeRoots": [
+      "../node_modules/@types"
+    ],
     "outDir": "dist",
     "sourceMap": true,
     "sourceRoot": "src",
-    "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": ["dom", "es5"],
     "types": [
       "body-parser",
       "compression",
       "cookie-parser",
       "express",
+      "mongoose",
       "express-serve-static-core",
       "mime",
       "node",
       "serve-static",
-      "hammerjs"
+      "hammerjs",
+      "core-js"
     ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules", //<-- this would be needed in case of VS2015
+   "node_modules/@typings",
+   "typings",
+   "dist"
   ],
   "compileOnSave": false,
   "buildOnSave": false,

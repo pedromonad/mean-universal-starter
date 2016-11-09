@@ -132,4 +132,4 @@ class ClientController {
 
 }
 
-export default ClientController;
+export = ClientController;

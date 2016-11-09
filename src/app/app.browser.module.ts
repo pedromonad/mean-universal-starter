@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UniversalModule, isBrowser, isNode } from 'angular2-universal/browser'; // for AoT we need to manually split universal packages
-import { ApolloModule } from 'angular2-apollo';
 
-import { client } from './apollo.browser';
+
 import { SharedModule } from './shared/shared.module';
 import { HomeModule } from './home/home.module';
 import { LoginModule } from './login/login.module';
@@ -27,7 +26,6 @@ export const UNIVERSAL_KEY = 'UNIVERSAL_CACHE';
   imports: [
     UniversalModule, // BrowserModule, HttpModule, and JsonpModule are included
     FormsModule,
-    ApolloModule.withClient(client),
 
     SharedModule,
     HomeModule,
