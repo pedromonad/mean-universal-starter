@@ -1,86 +1,95 @@
 'use strict';
 
-let express = require('express');
-let path = require('path');
-let favicon = require('serve-favicon');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
+/**
+ * Module dependencies.
+ */
 
-let app = express();
+// our modules can use import
+import * as app from './app';
 
-// view engine setup
-app.set('views', path.join(__dirname, 'server/views'));
-app.set('view engine', 'ejs');
+// node_modules must use require
+let debug = require('debug')('prueba2:server');
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
+// core modules can use import
+import * as http from 'http';
 
-//
-// connect to database and register models
-///////////////////////////////////////////////////////////
-require('./server/lib/connectMongoose');
+/**
+ * Get port from environment and store in Express.
+ */
 
-//
-// serve static files
-///////////////////////////////////////////////////////////
-app.use(express.static(path.join(__dirname, '../public')));
+let port = normalizePort(process.env['PORT'] || '3000');
+app.set('port', port);
 
-// web dependencies from node_modules
-app.use('/nm/bootstrap',    express.static(path.join(__dirname, '../node_modules/bootstrap/dist')));
-app.use('/nm/jquery',       express.static(path.join(__dirname, '../node_modules/jquery/dist')));
-app.use('/nm/tether',       express.static(path.join(__dirname, '../node_modules/tether/dist')));
+/**
+ * Create HTTP server.
+ */
 
-//
-// serve API V1 routes
-///////////////////////////////////////////////////////////
-app.use('/apiv1/products', require('./server/routes/apiv1/products').router);
+let server = http.createServer(app);
 
-//
-// serve Web routes
-///////////////////////////////////////////////////////////
-app.use('/',                require('./server/routes/index'));
-app.use('/products',        require('./server/routes/products'));
+/**
+ * Listen on provided port, on all network interfaces.
+ */
 
-// catch not handled and return 404
-app.use((req, res, next) => next({
-    message: 'Not Found',
-    status: 404,
-    stack: (new Error()).stack
-}));
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
 
-//
-// error handlers (dev / prod)
-///////////////////////////////////////////////////////////
+/**
+ * Normalize a port into a number, string, or false.
+ */
 
-// development error handler - will print stacktrace
-if (app.get('env') === 'development') {
-    app.use((err, req, res, next) => {
-        res.status(err.status || 500);
-        if (isApi(req)) {
-            res.json({success: false, error: err});
-        } else {
-            res.render('error', {message: err.message, error: err});
-        }
-    });
-}
+function normalizePort(val) {
+    let port = parseInt(val, 10);
 
-// production error handler - no stack-traces leaked to user
-app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    if (isApi(req)) {
-        res.json({success: false, error: err});
-    } else {
-        res.render('error', {message: err.message, error: {}});
+    if (isNaN(port)) {
+        // named pipe
+        return val;
     }
-});
 
-function isApi(req) {
-    return req.url.indexOf('/apiv1/') === 0;
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
 }
 
-export = app;
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    let bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    let address = server.address();
+    let bind = typeof address === 'string'
+        ? 'pipe ' + address
+        : 'port ' + address.port;
+    debug('Listening on ' + bind);
+}
