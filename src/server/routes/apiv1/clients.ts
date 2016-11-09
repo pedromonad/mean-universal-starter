@@ -129,8 +129,63 @@ export async function remove(req, res, next) {
 }
 
 
+router.get('/:clientId/comments', getComments);
+/**
+ * Load comments and append to req.
+ */
+export async function getComments(req, res, next) {
+    try {
+        let data = req.client.comments;
+        res.json({success: true, data});
+    } catch (err) {
+        next(err);
+    }
+}
+
+
+router.post("/:clientId/comments", createComment);
+/**
+ * Create new comment
+ * @property {string} req.body.info - The info of client.
+ * @returns {Client}
+ */
+export async function createComment(req, res, next) {
+    try {
+        const client = req.client;
+        const comment = {
+            description: req.body.description,
+        };
+        
+        client.comments.push(comment);
+        let comments = req.client.comments;
+
+        let data = await client.save();
+        let commentsSaved = data.comments.pop();
+        res.json({success: true, commentsSaved });
+    } catch (err) {
+        next(err);
+    }
+}
+
+
+router.delete("/:clientId/comments/:commentId", removeComment);
+/**
+ * Delete comment.
+ * @returns {Client}
+ */
+export async function removeComment(req, res, next) {
+    try {
+        const client = req.client;
+        client.comments.pull({ _id: req.params.commentId });
+        let data = await client.save();
+        res.json({success: true, data});
+    } catch (err) {
+        next(err);
+    }
+}
+
+
 /** Load client when API with clientId route parameter is hit */
 router.param('clientId', load);
-
 
 export {router};
