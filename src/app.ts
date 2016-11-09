@@ -18,7 +18,7 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 
-import ClientRoutes = require('./server__/routes/client');
+import * as httpStatus from 'http-status';
 
 // Angular 2
 import { enableProdMode } from '@angular/core';
@@ -82,13 +82,14 @@ app.use('/nm/tether',       express.static(path.join(__dirname, '../node_modules
 //
 // serve API V1 routes
 ///////////////////////////////////////////////////////////
-app.use('/apiv1/products', require('./server/routes/apiv1/products').router);
+app.use('/apiv1/clients', require('./server/routes/apiv1/clients').router);
 
 
 //
 // Server-side render
-app.use('/api/clients', new ClientRoutes().getRouter);
+//app.use('/api/clients', new ClientRoutes().getRouter);
 app.get('/', ngApp);
+app.get('/*', ngApp);
 app.get('/home', ngApp);
 app.get('/home/*', ngApp);
 app.get('/no-content', ngApp);
@@ -144,9 +145,11 @@ app.use((err, req, res, next) => {
     if (isApi(req)) {
         res.json({success: false, error: err});
     } else {
-        res.render('error', {message: err.message, error: {}});
+        const err = new Error('API not found ' + httpStatus.NOT_FOUND);
+        return next(err);
     }
 });
+
 
 
 function isApi(req) {

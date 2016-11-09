@@ -1,9 +1,9 @@
-import * as Product from './Product';
+import * as Client from './Client';
 
-describe('Product Model', () => {
+describe('Client Model', () => {
 
   let _find;
-  let model = Product;
+  let model = Client;
 
   beforeAll(() => {
     _find = model.find;
