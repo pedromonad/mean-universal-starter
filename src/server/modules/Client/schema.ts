@@ -1,13 +1,13 @@
 'use strict';
 
 /**
- * Client model
+ * Client schema
  * @module Client
  */
 
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-let schema = mongoose.Schema({
+let clientSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -74,8 +74,6 @@ let schema = mongoose.Schema({
     }
 });
 
-//schema.index({location: '2dsphere'});
-
 /**
  * List of clients
  * @method list
@@ -86,12 +84,12 @@ let schema = mongoose.Schema({
  * @param select Field names to include, space separated
  * @return {Promise<any>}
  */
-schema.statics.list = function(filter?: any,
+clientSchema.statics.list = function(filter?: any,
                                skip?: number, limit?: number,
                                sort?: string, select?: string): Promise<any> {
     try {
 
-        let query = Client.find()
+        let query = this.find()
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);    
@@ -111,15 +109,13 @@ schema.statics.list = function(filter?: any,
  * @param {ObjectId} id - The objectId of client.
  * @returns {Promise<Client, Error>}
  */
-schema.statics.get = function(id: number): Promise<any> {
+clientSchema.statics.get = function(id: number): Promise<any> {
     try {
-        return Client.findById(id)
+        return this.findById(id)
                     .exec();
     } catch (err) {
         return Promise.reject(err);
     }
 };
 
-var Client = mongoose.model('Client', schema);
-
-export = Client;
+export = clientSchema;

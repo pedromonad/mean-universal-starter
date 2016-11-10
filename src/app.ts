@@ -11,12 +11,15 @@ NodeDomRootRenderer.prototype.renderComponent = renderComponentFix;
 // End Fix Universal Style
 
 
-let express = require('express');
-let path = require('path');
-let favicon = require('serve-favicon');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
+const express = require('express');
+const compression = require('compression');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+
+const clientRoutes = require('./server/modules/Client/routes');
 
 import * as httpStatus from 'http-status';
 
@@ -42,6 +45,9 @@ app.use(helmet());
 
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
+
+// 
+app.use(compression());
 
 
 app.use(logger('dev'));
@@ -82,8 +88,7 @@ app.use('/nm/tether',       express.static(path.join(__dirname, '../node_modules
 //
 // serve API V1 routes
 ///////////////////////////////////////////////////////////
-app.use('/apiv1/clients', require('./server/routes/apiv1/clients').router);
-
+app.use('/apiv1/clients', clientRoutes);
 
 //
 // Server-side render

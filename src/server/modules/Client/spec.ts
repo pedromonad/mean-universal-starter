@@ -1,4 +1,4 @@
-import * as Client from './Client';
+import * as Client from './schema';
 
 describe('Client Model', () => {
 

@@ -1,16 +1,14 @@
 'use strict';
 
-let Client = require('../../models/Client');
-const router = require('express').Router();
+let Client = require('./repository');
 
-router.get('/', list);
 /**
  * GET /
  * @param req
  * @param res
  * @param next
  */
-export async function list(req, res, next) {
+async function list(req, res, next) {
     try {
         const { limit = 50, skip = 0 } = req.query;
         let data = await Client.list({ limit, skip });
@@ -21,12 +19,11 @@ export async function list(req, res, next) {
 }
 
 
-router.get('/:clientId', load);
 /**
  * Get client
  * @returns {Client}
  */
-export async function load(req, res, next, id) {
+async function load(req, res, next, id) {
     try {
         let data = await Client.get(id);
         res.json({success: true, data});
@@ -36,7 +33,6 @@ export async function load(req, res, next, id) {
 }
 
 
-router.post("/", create);
 /**
  * Create new client
  * @property {string} req.body.name - The name of client.
@@ -55,7 +51,7 @@ router.post("/", create);
  * @property {string} req.body.info - The info of client.
  * @returns {Client}
 */
-export async function create(req, res, next) {
+async function create(req, res, next) {
     try {
         const client = new Client({
             name: req.body.name,
@@ -81,14 +77,13 @@ export async function create(req, res, next) {
 }
 
 
-router.put("/:clientId", update);
 /**
  * GET /
  * @param req
  * @param res
  * @param next
  */
-export async function update(req, res, next) {
+async function update(req, res, next) {
     const client = req.client;
     client.name = req.body.name;
     client.lastName = req.body.lastName;
@@ -113,12 +108,11 @@ export async function update(req, res, next) {
 }
 
 
-router.delete('/:clientId', remove);
 /**
  * Delete client.
  * @returns {Client}
  */
-export async function remove(req, res, next) {
+async function remove(req, res, next) {
     try {
         const client = req.client;
         let data = await client.remove();
@@ -129,11 +123,10 @@ export async function remove(req, res, next) {
 }
 
 
-router.get('/:clientId/comments', getComments);
 /**
  * Load comments and append to req.
  */
-export async function getComments(req, res, next) {
+async function getComments(req, res, next) {
     try {
         let data = req.client.comments;
         res.json({success: true, data});
@@ -143,13 +136,12 @@ export async function getComments(req, res, next) {
 }
 
 
-router.post("/:clientId/comments", createComment);
 /**
  * Create new comment
- * @property {string} req.body.info - The info of client.
+ * @property {string} req.body.description - The visit description of client.
  * @returns {Client}
  */
-export async function createComment(req, res, next) {
+async function createComment(req, res, next) {
     try {
         const client = req.client;
         const comment = {
@@ -168,12 +160,11 @@ export async function createComment(req, res, next) {
 }
 
 
-router.delete("/:clientId/comments/:commentId", removeComment);
 /**
  * Delete comment.
  * @returns {Client}
  */
-export async function removeComment(req, res, next) {
+async function removeComment(req, res, next) {
     try {
         const client = req.client;
         client.comments.pull({ _id: req.params.commentId });
@@ -185,7 +176,5 @@ export async function removeComment(req, res, next) {
 }
 
 
-/** Load client when API with clientId route parameter is hit */
-router.param('clientId', load);
 
-export {router};
+export { load, list, create, update, remove, removeComment, createComment, getComments };
