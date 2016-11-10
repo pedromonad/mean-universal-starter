@@ -1,9 +1,8 @@
 const AuthCtrl = require('./controller');
 const router = require('express').Router();
 const expressJwt = require('express-jwt');
-let config: any = require('../../config/localConfig');
+const config: any = require('../../config/localConfig');
 
-console.log(config.jwtSecret);
 
 /** POST /api/auth/login - Returns token if correct username and password is provided */
 router.route('/login').post(AuthCtrl.login);

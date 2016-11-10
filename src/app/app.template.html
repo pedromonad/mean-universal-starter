@@ -2,10 +2,6 @@
 
   <nav class="navbar navbar-dark bg-primary">
     <div class="nav navbar-nav">
-      <a class="navbar-brand pull-right" [routerLink]="['/']">
-        <img class="angular2icon" src="public/assets/favicon.ico"> Angular 2 Full Stack
-      </a>
-
       <a routerLink="/home" routerLinkActive="active">Home</a>
 
       <a [routerLink]="['/clientes']" class="nav-item nav-link" routerLinkActive="active">
@@ -15,10 +11,11 @@
         <i class="fa fa-power-off"></i> Logout
       </a>
 
+      <a class="navbar-brand pull-right" [routerLink]="['/']">
+        <img class="angular2icon" src="/assets/favicon.ico"> Angular 2 Full Stack
+      </a>
     </div>
   </nav>
-
-  <h2>Hello Angular Universal App</h2>
 
   <router-outlet></router-outlet>
 

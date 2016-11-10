@@ -41,7 +41,7 @@ export class ClientService{
   private extractData(res: Response) {
     let body = res.json();
     //return body.data || { };
-    return body || { };
+    return body.data || { };
   }
   
   private handleError (error: any) {

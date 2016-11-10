@@ -70,11 +70,8 @@ require('./server/lib/connectMongoose');
 //
 // serve static files
 ///////////////////////////////////////////////////////////
-app.use('/assets', express.static(path.join(__dirname, 'assets'), {maxAge: 30}));
 app.use(express.static(path.join(__dirname, '../dist/client'), {index: false}));
-
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use('/assets', express.static(path.join(__dirname, 'public/assets'), {maxAge: 30}));
 
 // web dependencies from node_modules
 app.use('/nm/bootstrap',    express.static(path.join(__dirname, '../node_modules/bootstrap/dist')));
@@ -107,7 +104,7 @@ app.get('/login/*', ngApp);
 function ngApp(req, res) {
     return Promise.resolve()
         .then(() => {
-            res.render('index', {
+            res.render('public/index', {
                 req,
                 res,
                 preboot: false,

@@ -1,8 +1,8 @@
 'use strict';
 
-let mongoose = require('mongoose');
-let localConfig: any = require('../config/localConfig');
-let conn = mongoose.connection;
+const mongoose = require('mongoose');
+const localConfig: any = require('../config/localConfig');
+const conn = mongoose.connection;
 
 mongoose.Promise = global.Promise;
 
