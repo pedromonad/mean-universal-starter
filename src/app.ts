@@ -1,7 +1,12 @@
 'use strict';
 
 import 'angular2-universal-polyfills';
-
+// Angular 2
+import { enableProdMode } from '@angular/core';
+// Angular 2 Universal
+import { createEngine } from 'angular2-express-engine';
+// App
+import { MainModule } from './app/app.node.module';
 // Fix Universal Style
 import { NodeDomRootRenderer, NodeDomRenderer } from 'angular2-universal/node';
 function renderComponentFix(componentProto: any) {
@@ -18,23 +23,14 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
+const helmet = require('helmet');
+const cors = require('cors');
+const httpStatus = require('http-status');
 const clientRoutes = require('./server/modules/Client/routes');
-
-import * as httpStatus from 'http-status';
-
-// Angular 2
-import { enableProdMode } from '@angular/core';
-// Angular 2 Universal
-import { createEngine } from 'angular2-express-engine';
-
-// App
-import { MainModule } from './app/app.node.module';
-import * as helmet from 'helmet';
-import * as cors from 'cors';
+const userRoutes = require('./server/modules/User/routes');
+const authRoutes = require('./server/modules/Auth/routes');
 
 let app = express();
-
 
 // view engine setup
 app.set('views', __dirname);
@@ -89,6 +85,8 @@ app.use('/nm/tether',       express.static(path.join(__dirname, '../node_modules
 // serve API V1 routes
 ///////////////////////////////////////////////////////////
 app.use('/apiv1/clients', clientRoutes);
+app.use('/apiv1/users', userRoutes);
+app.use('/apiv1/auth', authRoutes);
 
 //
 // Server-side render

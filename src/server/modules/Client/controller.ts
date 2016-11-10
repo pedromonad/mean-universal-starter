@@ -78,10 +78,22 @@ async function create(req, res, next) {
 
 
 /**
- * GET /
- * @param req
- * @param res
- * @param next
+ * Update existing client
+ * @property {string} req.body.name - The name of client.
+ * @property {string} req.body.lastName - The lastName of client.
+ * @property {string} req.body.rg - The rg of client.
+ * @property {string} req.body.cpf - The cpf of client.
+ * @property {string} req.body.maritalStatus - The maritalStatus of client.
+ * @property {string} req.body.sex - The sex of client.
+ * @property {string} req.body.address - The address of client.
+ * @property {string} req.body.city - The city of client.
+ * @property {string} req.body.state - The state of client.
+ * @property {string} req.body.phone - The phone of client.
+ * @property {string} req.body.facebook - The facebook of client.
+ * @property {string} req.body.email - The email of client.
+ * @property {string} req.body.birthday - The birthday of client.
+ * @property {string} req.body.info - The info of client.
+ * @returns {Client}
  */
 async function update(req, res, next) {
     const client = req.client;

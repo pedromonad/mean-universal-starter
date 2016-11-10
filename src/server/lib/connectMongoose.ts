@@ -15,8 +15,8 @@ conn.once('open', function() {
     console.info('Connected to Mongodb.');
 });
 
-console.log(`Connecting to ${localConfig.MongodbConnection.uri} ...`);
+console.log(`Connecting to ${localConfig.uri} ...`);
 
-mongoose.connect(localConfig.MongodbConnection.uri, localConfig.MongodbConnection.options);
+mongoose.connect(localConfig.uri, localConfig.options);
 
 export { conn };
