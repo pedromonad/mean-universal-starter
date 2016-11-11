@@ -33,9 +33,9 @@
   },
   "exclude": [
     "node_modules", //<-- this would be needed in case of VS2015
-   "node_modules/@typings",
-   "typings",
-   "dist"
+    "node_modules/@typings",
+    "typings",
+    "dist"
   ],
   "compileOnSave": false,
   "buildOnSave": false,
