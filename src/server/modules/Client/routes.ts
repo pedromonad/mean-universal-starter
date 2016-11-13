@@ -1,15 +1,43 @@
 const ClientCtrl = require('./controller');
 const router = require('express').Router();
+const validate = require ('express-validation');
+const paramValidation = require('../../config/param-validation');
 
-router.get('/', ClientCtrl.list);
-router.get('/:clientId', ClientCtrl.load);
-router.post('/', ClientCtrl.create);
-router.put('/:clientId', ClientCtrl.update);
-router.delete('/:clientId', ClientCtrl.remove);
-router.get('/:clientId/comments', ClientCtrl.getComments);
-router.delete("/:clientId/comments/:commentId", ClientCtrl.removeComment);
+
+router.route('/')
+  /** GET /api/clients - Get list of clients */
+  .get(ClientCtrl.list)
+
+  /** POST /api/clients - Create new client */
+  .post(
+      validate(paramValidation.createClient), 
+      ClientCtrl.create);
+
+router.route('/:clientId')
+  /** GET /api/clients/:clientId - Get client */
+  .get(ClientCtrl.get)
+
+  /** PUT /api/clients/:clientId - Update client */
+  .put(
+      validate(paramValidation.updateClient), 
+      ClientCtrl.update)
+
+  /** DELETE /api/clients/:clientId - Delete client */
+  .delete(ClientCtrl.remove);
+
+
+router.route('/:clientId/comments')
+  .post(
+      validate(paramValidation.createComment),
+       ClientCtrl.createComment)
+
+  .get(ClientCtrl.getComments);
+
+router.route('/:clientId/comments/:commentId')  
+  .delete(ClientCtrl.removeComment);
+
 
 /** Load client when API with clientId route parameter is hit */
-router.param('clientId', ClientCtrl.load);
+//router.param('clientId', ClientCtrl.load);
 
 export = router;

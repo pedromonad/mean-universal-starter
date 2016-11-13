@@ -23,6 +23,15 @@ async function list(req, res, next) {
  * Get client
  * @returns {Client}
  */
+function get(req, res) {
+  return res.json(req.client);
+}
+
+
+/**
+ * Get client
+ * @returns {Client}
+ */
 async function load(req, res, next, id) {
     try {
         let data = await Client.get(id);
@@ -96,7 +105,7 @@ async function create(req, res, next) {
  * @returns {Client}
  */
 async function update(req, res, next) {
-    const client = req.client;
+    const client = await Client.get(req.params.clientId);
     client.name = req.body.name;
     client.lastName = req.body.lastName;
     client.rg = req.body.rg;
@@ -126,7 +135,7 @@ async function update(req, res, next) {
  */
 async function remove(req, res, next) {
     try {
-        const client = req.client;
+        const client = await Client.get(req.params.clientId);
         let data = await client.remove();
         res.json({success: true, data});
     } catch (err) {
@@ -140,7 +149,8 @@ async function remove(req, res, next) {
  */
 async function getComments(req, res, next) {
     try {
-        let data = req.client.comments;
+        const client = await Client.get(req.params.clientId);
+        let data = client.comments;
         res.json({success: true, data});
     } catch (err) {
         next(err);
@@ -155,7 +165,7 @@ async function getComments(req, res, next) {
  */
 async function createComment(req, res, next) {
     try {
-        const client = req.client;
+        const client = await Client.get(req.params.clientId);
         const comment = {
             description: req.body.description,
         };
@@ -163,9 +173,9 @@ async function createComment(req, res, next) {
         client.comments.push(comment);
         let comments = req.client.comments;
 
-        let data = await client.save();
-        let commentsSaved = data.comments.pop();
-        res.json({success: true, commentsSaved });
+        let commentsSaved = await client.save();
+        let data = commentsSaved.comments.pop();
+        res.json({success: true, data });
     } catch (err) {
         next(err);
     }
@@ -178,7 +188,7 @@ async function createComment(req, res, next) {
  */
 async function removeComment(req, res, next) {
     try {
-        const client = req.client;
+        const client = await Client.get(req.params.clientId);
         client.comments.pull({ _id: req.params.commentId });
         let data = await client.save();
         res.json({success: true, data});
@@ -189,4 +199,4 @@ async function removeComment(req, res, next) {
 
 
 
-export { load, list, create, update, remove, removeComment, createComment, getComments };
+export { load, list, get, create, update, remove, removeComment, createComment, getComments };
