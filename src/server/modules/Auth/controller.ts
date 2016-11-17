@@ -14,7 +14,7 @@ async function login(req, res, next) {
     try {
         let data = await User.find({ username: req.body.username, password: req.body.username });
         const token = jwt.sign({ username: data.username }, config.jwtSecret);
-
+        
         return res.json({
             token,
             username: data.username

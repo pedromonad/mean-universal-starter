@@ -7,13 +7,14 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class ClientService{
   private url = 'apiv1/clients/';
-  private headers = new Headers({ 'Content-Type': 'application/json' });
+  private token = 'Bearer ' + JSON.parse(localStorage.getItem('currentUser')).token;
+  private headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': this.token });
   private options = new RequestOptions({ headers: this.headers });
   constructor(private http: Http) {
   }
 
   getAll (): Observable<Client[]> {
-    return this.http.get(this.url)
+    return this.http.get(this.url, this.options)
                     .map(this.extractData)
                     .catch(this.handleError);
   }

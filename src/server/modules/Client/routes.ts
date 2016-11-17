@@ -2,24 +2,26 @@ const ClientCtrl = require('./controller');
 const router = require('express').Router();
 const validate = require ('express-validation');
 const paramValidation = require('../../config/param-validation');
-
+const expressJwt = require('express-jwt');
+const config: any = require('../../config/localConfig');
+const jwtAuth = expressJwt({ secret: config.jwtSecret });
 
 router.route('/')
   /** GET /api/clients - Get list of clients */
-  .get(ClientCtrl.list)
+  .get(jwtAuth, ClientCtrl.list)
 
   /** POST /api/clients - Create new client */
   .post(
-      validate(paramValidation.createClient), 
+      jwtAuth, validate(paramValidation.createClient), 
       ClientCtrl.create);
 
 router.route('/:clientId')
   /** GET /api/clients/:clientId - Get client */
-  .get(ClientCtrl.get)
+  .get(jwtAuth, ClientCtrl.get)
 
   /** PUT /api/clients/:clientId - Update client */
   .put(
-      validate(paramValidation.updateClient), 
+      jwtAuth, validate(paramValidation.updateClient), 
       ClientCtrl.update)
 
   /** DELETE /api/clients/:clientId - Delete client */
@@ -28,13 +30,13 @@ router.route('/:clientId')
 
 router.route('/:clientId/comments')
   .post(
-      validate(paramValidation.createComment),
+      jwtAuth, validate(paramValidation.createComment),
        ClientCtrl.createComment)
 
   .get(ClientCtrl.getComments);
 
 router.route('/:clientId/comments/:commentId')  
-  .delete(ClientCtrl.removeComment);
+  .delete(jwtAuth, ClientCtrl.removeComment);
 
 
 /** Load client when API with clientId route parameter is hit */
